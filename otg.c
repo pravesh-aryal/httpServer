@@ -2,5 +2,6 @@
 
 int main(){
     printf("HEllo world");
+    perror("hi");
     return 0;
 }

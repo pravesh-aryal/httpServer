@@ -1,0 +1,13 @@
+Accept TCP connections on a configurable port
+Read raw HTTP request from client socket
+Parse HTTP request line (method, path, version)
+Parse HTTP headers
+Support GET method
+Generate valid HTTP response status line
+Set required HTTP headers (e.g., Content-Type, Content-Length)
+Include file content in response body (for GET)
+Map URL path to server root directory
+Prevent directory traversal (../ in path)
+Serve static files (e.g., .html, .css, .jpg)
+Determine MIME type from file extension 
+Send correct HTTP status codes (200, 404, 500, etc.)

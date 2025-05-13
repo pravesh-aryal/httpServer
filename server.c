@@ -9,11 +9,6 @@
 
 #define PORT 3490
 
-
-
-
-
-
 int main(void){
     int opt = 1, server_socket;
     int client_socket;
@@ -21,8 +16,26 @@ int main(void){
     struct sockaddr_in address;
     socklen_t addrlen = sizeof(address);
     char buffer[1024] = {0};
-    char *hello = "Hello from the server";
+    // char *hello = "<h1>Hello from the server</h1>";
 
+    char *hello =
+    "HTTP/1.1 200 OK\r\n"
+    "Content-Type: text/html\r\n"
+    "Content-Length: 169\r\n"
+    "Connection: close\r\n"
+    "\r\n"
+    "<!DOCTYPE html>\n"
+    "<html lang=\"en\">\n"
+    "<head>\n"
+    "    <meta charset=\"UTF-8\">\n"
+    "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
+    ""
+    "</head>\n"
+    "<body>\n"
+    "    <h1>Hello world!</h1>\n"
+    "</body>\n"
+    "</html>\n";
+    
 
     if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0){
         perror("socket creation faild");
@@ -63,6 +76,5 @@ int main(void){
     close(client_socket);
     close(server_socket);
     return 0;
-
 
 }

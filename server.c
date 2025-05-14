@@ -1,4 +1,5 @@
 #include "server.h"
+#include "file_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,24 +18,19 @@ int main(void){
     socklen_t addrlen = sizeof(address);
     char buffer[1024] = {0};
     // char *hello = "<h1>Hello from the server</h1>";
-
-    char *hello =
-    "HTTP/1.1 200 OK\r\n"
-    "Content-Type: text/html\r\n"
-    "Content-Length: 169\r\n"
-    "Connection: close\r\n"
-    "\r\n"
-    "<!DOCTYPE html>\n"
-    "<html lang=\"en\">\n"
-    "<head>\n"
-    "    <meta charset=\"UTF-8\">\n"
-    "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
-    ""
-    "</head>\n"
-    "<body>\n"
-    "    <h1>Hello world!</h1>\n"
-    "</body>\n"
-    "</html>\n";
+    const char *body = read_file("./static/home.html");
+    
+    char hello[2048];
+    snprintf(hello, sizeof(hello),
+        "HTTP/1.1 200 OK\r\n"
+        "Content-Type: text/html\r\n"
+        "Content-Length: %zu\r\n"
+        "Connection: close\r\n"
+        "\r\n"
+        "%s",
+        strlen(body), body);
+    
+    
     
 
     if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0){
@@ -75,6 +71,8 @@ int main(void){
 
     close(client_socket);
     close(server_socket);
+
+
     return 0;
 
 }

@@ -1,6 +1,9 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#define MAX_ROUTES 1024
+#define PORT 3490
+
 #include "routes.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,14 +18,15 @@ typedef struct {
     int port;
     char ip[INET_ADDRSTRLEN];
     int max_clients;
-    int clinet_sockets[FD_SETSIZE];
+    int client_sockets[FD_SETSIZE];
     char request_buffer[8192];
     char response_buffer[8192];
-
+    struct sockaddr_in address;
+    Route routes[MAX_ROUTES];
 } Server;
 
 
-Server init_server();
-void run();
+Server initServer();
+void runServer();
 
 #endif

@@ -8,71 +8,53 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include "routes.h"
-#define PORT 3490
+#include "server.h"
 
-int main(void){
-    int opt = 1, server_socket;
-    int client_socket;
-    ssize_t message_read; 
-    struct sockaddr_in address;
-    socklen_t addrlen = sizeof(address);
+
+Server initServer(){
+    int opt = 1;
+    Server server;
+    socklen_t addrlen = sizeof(server.address);
+    ssize_t response_string;
     char buffer[1024] = {0};
-    // char *hello = "<h1>Hello from the server</h1>";
-    const char *body = read_file("./static/home.html");
-    
-    char hello[2048];
-    snprintf(hello, sizeof(hello),
-        "HTTP/1.1 200 OK\r\n"
-        "Content-Type: text/html\r\n"
-        "Content-Length: %zu\r\n"
-        "Connection: close\r\n"
-        "\r\n"
-        "%s",
-        strlen(body), body);
-    
-    
-    // register_route("/home", "GET", "./static/home.html");
 
-    if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0){
-        perror("socket creation faild");
+    if ((server.server_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0){
+        perror("socket: ");
         exit(EXIT_FAILURE);
     }
 
-    if (setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))){
-        perror("setsocopt: ");
+    if (setsockopt(server.server_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))){
+        perror("setsockopt; ");
         exit(EXIT_FAILURE);
     }
 
-    address.sin_family = AF_INET;
-    address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons(PORT);
+    server.address.sin_family = AF_INET;
+    server.address.sin_addr.s_addr = INADDR_ANY;
+    server.address.sin_port = htons(PORT);
 
+    return server;
 
-    //attach server socket to PORT
-    if (bind(server_socket, (struct sockaddr*)&address, sizeof(address)) < 0){
-        perror("Binding failed");
+}
+
+void runServer(Server server){
+    int client_socket;
+    if (bind(server.server_socket, (struct sockaddr*)&server.address, sizeof(server.address)) < 0){
+        perror("bind:");
+        exit(EXIT_FAILURE);
+    }
+    if (listen(server.server_socket, 3) < 0){
+        perror("listen:");
         exit(EXIT_FAILURE);
     }
 
-    if (listen(server_socket, 3) < 0){
-        perror("listen failed");
-        exit(EXIT_FAILURE);
-    }
-
-    if ((client_socket = accept(server_socket, (struct sockaddr*)&address, &addrlen)) < 0){
+    if ((client_socket = accept(server.server_socket, (struct sockaddr*)&server.address, &addrlen)) < 0){
         perror("Accept failed");
         exit(EXIT_FAILURE);
     }
-
-    message_read = read(client_socket, buffer, 1024-1);
+    request_string = read(client_socket, buffer, 1024-1);
     printf("%s \n", buffer);
-    send(client_socket, hello, strlen(hello), 0);
-    printf("Hello message sent to client \n");
+    send(client_socket, response_string, strlen(response_string), 0);
 
     close(client_socket);
-    close(server_socket);
-
-    
-    return 0;
-
+    close(server.server_socket);
 }

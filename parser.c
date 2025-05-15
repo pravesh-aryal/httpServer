@@ -1,6 +1,8 @@
 #include <stdio.h> 
 #include <string.h>
 #include "request.h"
+#include "response.h"
+
 
 Request request;
 
@@ -43,7 +45,23 @@ Request parseRequest(char *request_string){
     return request;
 }
 
+char* parseResponse(){
+    Response response = getResponse();
+    //now create the response string
+    char* responseString =  "HTTP/1.1 200 OK\r\n"
+    "Content-Type: text/html\r\n"
+    "Content-Length: 70\r\n"
+    "Connection: close\r\n"
+    "\r\n"
+    "<!DOCTYPE html>\n"
+    "<html>\n"
+    "  <body>\n"
+    "    <h1>Hello, world!</h1>\n"
+    "  </body>\n"
+    "</html>\n";
 
+    return responseString;
+}
 
 
 

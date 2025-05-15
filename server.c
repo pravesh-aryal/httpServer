@@ -7,7 +7,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
-
+#include "routes.h"
 #define PORT 3490
 
 int main(void){
@@ -31,7 +31,7 @@ int main(void){
         strlen(body), body);
     
     
-    
+    // register_route("/home", "GET", "./static/home.html");
 
     if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) < 0){
         perror("socket creation faild");
@@ -72,7 +72,7 @@ int main(void){
     close(client_socket);
     close(server_socket);
 
-
+    
     return 0;
 
 }

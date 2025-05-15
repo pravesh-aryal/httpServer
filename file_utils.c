@@ -19,7 +19,7 @@ int count_chars(FILE* file_ptr){
 }
 
 
-char* read_file(char* file_path){
+char* get_html_from_file(char* file_path){
     //file_path = ./static/index.html 
     FILE* file_ptr;
     file_ptr = fopen(file_path, "r");

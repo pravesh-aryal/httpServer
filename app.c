@@ -4,8 +4,8 @@
 Server app;
 
 int main(){
-    app = init_server(app);
+    app = initServer(app);
     register_route("/home", "GET", "./static/home.html");
     register_route("/index", "GET", "./static/index.html");
-    // run(app);
+    runServer(app); 
 }

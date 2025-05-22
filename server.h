@@ -26,7 +26,7 @@ typedef struct {
 } Server;
 
 
-Server initServer();
-void runServer();
+Server initServer(Server server);
+void runServer(Server server);
 
 #endif

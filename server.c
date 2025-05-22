@@ -9,11 +9,16 @@
 #include <unistd.h>
 #include "routes.h"
 #include "server.h"
+#include "parser.h"
+#include "request.h"
 
 
-Server initServer(){
+Server initServer(Server server);
+void runServer(Server server);
+
+
+Server initServer(Server server){
     int opt = 1;
-    Server server;
     socklen_t addrlen = sizeof(server.address);
     ssize_t response_string;
     char buffer[1024] = {0};
@@ -38,6 +43,10 @@ Server initServer(){
 
 void runServer(Server server){
     int client_socket;
+    char buffer[1024];
+    char *request_string;
+    char *response_string;
+    socklen_t addrlen = sizeof(server.address);
     if (bind(server.server_socket, (struct sockaddr*)&server.address, sizeof(server.address)) < 0){
         perror("bind:");
         exit(EXIT_FAILURE);
@@ -51,8 +60,15 @@ void runServer(Server server){
         perror("Accept failed");
         exit(EXIT_FAILURE);
     }
-    request_string = read(client_socket, buffer, 1024-1);
-    printf("%s \n", buffer);
+
+    ssize_t bytes_received = recv(client_socket, buffer, sizeof(buffer) - 1, 0);
+    buffer[bytes_received] = '\0';
+    request_string = buffer;
+
+    Request request = parseRequest(request_string);
+    response_string = getParsedResponse(request);
+
+
     send(client_socket, response_string, strlen(response_string), 0);
 
     close(client_socket);

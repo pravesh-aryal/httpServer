@@ -2,8 +2,9 @@
 #include <string.h>
 #include "request.h"
 #include "response.h"
-
-
+#include "routes.h"
+#include "file_utils.h"
+#include <stdlib.h>
 Request request;
 
 void parseRequestLine(char* request_line){
@@ -45,57 +46,34 @@ Request parseRequest(char *request_string){
     return request;
 }
 
-char* parseResponse(){
-    Response response = getResponse();
-    //now create the response string
-    char* responseString =  "HTTP/1.1 200 OK\r\n"
-    "Content-Type: text/html\r\n"
-    "Content-Length: 70\r\n"
-    "Connection: close\r\n"
-    "\r\n"
-    "<!DOCTYPE html>\n"
-    "<html>\n"
-    "  <body>\n"
-    "    <h1>Hello, world!</h1>\n"
-    "  </body>\n"
-    "</html>\n";
+char* getParsedResponse(Request* request) {
+    const char* body;
+    printf("File path: %s \n", request->uri);
+    if (route_exists(request->uri)){
+        printf("Get path from route: %s \n", get_path_from_route(request->uri));
+        body = get_html_from_file(get_path_from_route(request->uri));
+    }
 
-    return responseString;
+    const char* content_type = "text/html";
+    int body_len = strlen(body);
+
+    size_t response_size = 1024 + body_len;
+    char* response = (char*)malloc(response_size);
+    if (!response) return NULL;
+
+    snprintf(response, response_size,
+        "%s 200 OK\r\n"
+        "Content-Type: %s\r\n"
+        "Content-Length: %d\r\n"
+        "Connection: close\r\n"
+        "\r\n"
+        "%s",
+        request->http_version ? request->http_version : "HTTP/1.1",
+        content_type,
+        body_len,
+        body
+    );
+
+    return response;
 }
 
-
-
-
-
-
-// int main(){
-//     int index = 0;
-//     char* request_string =
-//         "GET / HTTP/1.1\r\n"
-//         "Host: localhost:3490\r\n"
-//         "Connection: keep-alive\r\n"
-//         "Cache-Control: max-age=0\r\n"
-//         "sec-ch-ua: \"Not(A:Brand\";v=\"99\", \"Opera\";v=\"118\", \"Chromium\";v=\"133\"\r\n"
-//         "sec-ch-ua-mobile: ?0\r\n"
-//         "sec-ch-ua-platform: \"macOS\"\r\n"
-//         "Upgrade-Insecure-Requests: 1\r\n"
-//         "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36 OPR/118.0.0.0\r\n"
-//         "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7\r\n"
-//         "Sec-Fetch-Site: none\r\n"
-//         "Sec-Fetch-Mode: navigate\r\n"
-//         "Sec-Fetch-User: ?1\r\n"
-//         "Sec-Fetch-Dest: document\r\n"
-//         "Accept-Encoding: gzip, deflate, br, zstd\r\n"
-//         "\r\n";
-
-//     char *request_copy = strdup(request_string); //cannot modify request_string
-//     removeCarriageReturns(request_copy);
-//     char* current_line = strsep(&request_copy, "\n"); //now this is the request line
-//     parseRequestLine(current_line);
-//     //rest lines are headers in key:value form
-//     while ( *request_copy != '\n' && (current_line = strsep(&request_copy, "\n"))){
-//             parseHeaderLine(current_line, index++);
-//     }
-    
-//     return 0;
-// }

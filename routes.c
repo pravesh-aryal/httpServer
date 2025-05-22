@@ -4,29 +4,33 @@
 #include <string.h>
 #include <ctype.h>
 #include <unistd.h>
-#include <file_utils.h>
+#include "file_utils.h"
 
 
-int index = 0;
+int length = 0;
 
 void register_route(char* uri, char* method, char* path_to_template){
-    routes[index].uri = uri;
-    routes[index].method = method;
-    routes[index].path_to_template = path_to_template;  
-    index++;  
+    routes[length].uri = uri;
+    routes[length].method = method;
+    routes[length].path_to_template = path_to_template;  
+    length++;  
 }
 
 int route_exists(char *uri){
-    for (int i = 0; i < index; i++){
+    for (int i = 0; i < length; i++){
         if (strcmp(routes[i].uri, uri) == 0) { //if route exists
+            printf("Route exists: %s \n", routes[i].uri);
             return 1;
         }
     }
     return 0; //if route DNE
 }
 
-
-//main is for testing purpose during development
-// int main(){
-
-// }
+char* get_path_from_route(char *uri){
+    for (int i = 0; i < length; i++){
+        if (strcmp(routes[i].uri, uri) == 0){
+            return routes[i].path_to_template;
+        }
+    }
+    return "";
+}

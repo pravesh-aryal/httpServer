@@ -5,7 +5,10 @@ Server app;
 
 int main(){
     app = initServer(app);
+
     register_route("/home", "GET", "./static/home.html");
-    register_route("/index", "GET", "./static/index.html");
+
+    register_route("/about", "GET", "./static/about.html");
+
     runServer(app); 
 }

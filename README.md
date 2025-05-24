@@ -23,9 +23,9 @@ This project helped me explore:
 | `return render_template("...")`  | `get_html_from_file(...)`               |
 | `app.run()`                      | `runServer(...)`                        |
 
-![](images/flaskservercode.png)      ![](images/myservercode.png)
+![](https://github.com/)
 
-
+https://github.com/Lovepreet-Singh-LPSK/MultiThreadedProxyServerClient/blob/main/pics/UML.JPG
 ---
 
 ## 🛠️ How to Run

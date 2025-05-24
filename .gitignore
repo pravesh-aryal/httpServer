@@ -1,0 +1,12 @@
+otg.c
+otg2.c
+*.out
+# *
+!*/
+!*.c
+!*.h
+!Makefile
+!*.txt
+.vscode
+parser.dSYM
+app.dSYM

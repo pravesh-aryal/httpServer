@@ -23,7 +23,9 @@ This project helped me explore:
 | `return render_template("...")`  | `get_html_from_file(...)`               |
 | `app.run()`                      | `runServer(...)`                        |
 
-![alt text](image.png)             ![alt text](image-1.png)
+![Alt text](images/flaskservercode.png)      ![Alt text](images/myservercode.png)
+
+
 ---
 
 ## 🛠️ How to Run

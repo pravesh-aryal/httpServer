@@ -23,7 +23,7 @@ This project helped me explore:
 | `return render_template("...")`  | `get_html_from_file(...)`               |
 | `app.run()`                      | `runServer(...)`                        |
 
-![Alt text](images/flaskservercode.png)      ![Alt text](images/myservercode.png)
+![](images/flaskservercode.png)      ![](images/myservercode.png)
 
 
 ---

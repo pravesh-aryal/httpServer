@@ -82,7 +82,7 @@ void runServer(Server server) {
         exit(EXIT_FAILURE);
     }
 
-    if (listen(server.server_socket, 10) < 0) {
+    if (listen(server.server_socket, 100) < 0) {
         perror("listen");
         exit(EXIT_FAILURE);
     }
